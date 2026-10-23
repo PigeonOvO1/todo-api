@@ -1,0 +1,28 @@
+# 虚拟环境
+.venv/
+venv/
+
+# PyCharm
+.idea/
+
+# Python 缓存
+__pycache__/
+*.pyc
+*.pyo
+
+# 数据库文件
+*.db
+*.sqlite3
+
+# 数据与输出
+data/*
+!data/.gitkeep
+*.xlsx
+*.csv
+
+# 日志
+*.log
+
+# 系统文件
+.DS_Store
+Thumbs.db
