@@ -1,4 +1,10 @@
 from app import app, init_db
+from db import get_db
+
+conn = get_db()
+conn.execute("DELETE FROM tasks")     # 清空，让每次测试从干净状态开始
+conn.commit()
+conn.close()
 
 init_db()
 c = app.test_client()
@@ -33,7 +39,7 @@ print(r.status_code, r.get_json())
 
 print()
 print("=== 删除 ===")
-r = c.delete("/api/tasks/1")
+r = c.delete("/api/tasks/19")
 print(r.status_code, r.get_json())
 r = c.delete("/api/tasks/1")
 print(r.status_code, r.get_json())
