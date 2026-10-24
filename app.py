@@ -60,3 +60,24 @@ def add_task():
     conn.close()
 
     return jsonify(dict(row)),201
+
+
+# 删除
+@app.route('/api/tasks/<int:task_id>',methods = ['DELETE'])
+def delete_task(task_id):
+    conn = get_db()
+    cur = conn.execute(
+        "DELETE FROM tasks WHERE id = ?",(task_id,)
+    )
+    conn.commit()
+    conn.close()
+
+    if cur.rowcount == 0:
+        return jsonify({"error":f"任务{task_id}不存在"}),404
+
+    return jsonify({"deleted":{task_id}})
+
+
+if __name__ == "__main__":
+    init_db()
+    app.run(debug=True,port=5000)
