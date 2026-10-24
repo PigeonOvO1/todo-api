@@ -1,15 +1,21 @@
-from flask import Flask,request,jsonify
+from flask import Flask, jsonify, request
+
+from db import get_db, init_db
 
 app = Flask(__name__)
 
+
 @app.route("/")
-def hello():
-    return "Hello,Flask!"
+def index():
+    return "Todo API is running!"
 
-@app.route("/api/echo", methods = ["POST"])
-def echo():
-    data = request.get_json()
-    return jsonify({"receiver":data})
 
-if __name__ == "__main__":
-    app.run(debug=True,port=5000)
+@app.route('/api/tasks')
+def list_tasks():
+    conn = get_db()
+    rows = conn.execute(
+        "SELECT id,title,done,created_at FROM tasks ORDER by id"
+    ).fetchall()
+    conn.close()
+
+    return jsonify([dict(r) for r in rows])

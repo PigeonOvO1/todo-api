@@ -1,12 +1,39 @@
-from app import app          # 把上面那个 app 导入进来
+from app import app, init_db
 
-client = app.test_client()   # 测试客户端，不需要真的开服务器
+init_db()
+c = app.test_client()
 
-r1 = client.get("/")                                  # 模拟 GET
-print("GET /          ->", r1.status_code, r1.get_data(as_text=True))
+print("=== 查全部（空）===")
+r = c.get("/api/tasks")
+print(r.status_code, r.get_json())
 
-r2 = client.post("/api/echo", json={"name": "小明"})    # 模拟 POST，传 JSON
-print("POST /api/echo ->", r2.status_code, r2.get_json())
+print()
+print("=== 新增两条 ===")
+r = c.post("/api/tasks", json={"title": "买牛奶"})
+print(r.status_code, r.get_json())
+r = c.post("/api/tasks", json={"title": "写代码"})
+print(r.status_code, r.get_json())
 
-r3 = client.get("/nope")                              # 不存在的路径
-print("GET /nope      ->", r3.status_code)
+print()
+print("=== 查全部 ===")
+r = c.get("/api/tasks")
+print(r.status_code, r.get_json())
+
+print()
+print("=== 查单个 ===")
+r = c.get("/api/tasks/1")
+print(r.status_code, r.get_json())
+r = c.get("/api/tasks/999")
+print(r.status_code, r.get_json())
+
+print()
+print("=== 新增失败：title 为空 ===")
+r = c.post("/api/tasks", json={"title": "   "})
+print(r.status_code, r.get_json())
+
+print()
+print("=== 删除 ===")
+r = c.delete("/api/tasks/1")
+print(r.status_code, r.get_json())
+r = c.delete("/api/tasks/1")
+print(r.status_code, r.get_json())
